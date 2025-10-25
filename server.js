@@ -1,9 +1,16 @@
-const express = require('express');
-const app = express();
+FROM node:20-alpine
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', ts: new Date().toISOString() });
-});
+WORKDIR /app
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(M Dent API listening on ${port}));
+# Copy manifests first for cache
+COPY package*.json ./
+RUN npm install --omit=dev
+
+# Copy app
+COPY . .
+
+ENV NODE_ENV=production
+ENV PORT=80
+EXPOSE 80
+
+CMD ["npm","start"]
