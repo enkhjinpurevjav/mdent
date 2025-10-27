@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "@prisma/client": "latest"
+      "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "prisma": "latest"
