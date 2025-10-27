@@ -1,19 +1,21 @@
 {
   "name": "mdent",
   "version": "1.0.0",
-  "type": "module",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate deploy",
+    "prisma:seed": "npx prisma db seed"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "@prisma/client": "latest"
-      "jsonwebtoken": "^9.0.2"
+    "@prisma/client": "latest",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "prisma": "latest"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
   }
 }
