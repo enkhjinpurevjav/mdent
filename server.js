@@ -45,6 +45,38 @@ app.get('/appointments', async (req, res) => {
 const PORT = process.env.PORT || 80;
 app.listen(PORT, () => console.log(`API listening on ${PORT}`));
 
+// at top with other requires
+const jwt = require('jsonwebtoken');
+
+// ... keep your existing code (express, prisma, app.use(express.json()), routes)
+
+// --- AUTH ---
+app.post('/auth/login', async (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) return res.status(400).json({ error: 'missing_fields' });
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return res.status(401).json({ error: 'invalid_credentials' });
+
+  // TEMP: passwords are plain from seed; switch to bcrypt later
+  const ok = user.password === password;
+  if (!ok) return res.status(401).json({ error: 'invalid_credentials' });
+
+  const token = jwt.sign({ sub: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '12h' });
+  res.json({ token });
+});
+
+// simple middleware you can use to protect routes
+function auth(req, res, next) {
+  const h = req.headers.authorization || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'unauthorized' });
+  try { req.user = jwt.verify(token, process.env.JWT_SECRET); next(); }
+  catch { return res.status(401).json({ error: 'unauthorized' }); }
+}
+
+// example: protect patient creation
+// app.post('/patients', auth, async (req, res, next) => { ... })
 
 
 
