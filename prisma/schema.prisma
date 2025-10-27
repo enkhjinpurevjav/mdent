@@ -23,7 +23,7 @@ model Patient {
   firstName   String
   lastName    String
   phone       String?      
-  email       String?      
+  email       String?      @unique
   birthDate   DateTime?
   notes       String?
   createdAt   DateTime     @default(now())
