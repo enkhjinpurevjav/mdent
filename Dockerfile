@@ -16,5 +16,4 @@ RUN npx prisma generate
 # ---- 5. Expose and run ----
 EXPOSE 80
 ENV PORT=80
-CMD ["node", "server.js"]
-
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
