@@ -61,8 +61,22 @@ app.post('/auth/login', async (req, res) => {
 // Error handler
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ error: 'internal_error' });
+
+  // Prisma known request errors
+  if (err && err.code === 'P2002') {
+    // Unique constraint failed
+    return res.status(409).json({ error: 'unique_constraint', meta: err.meta });
+  }
+  if (err && err.code === 'P2003') {
+    // Foreign key constraint failed
+    return res.status(409).json({ error: 'foreign_key_constraint', meta: err.meta });
+  }
+
+  // Validation-ish
+  if (err && err.name === 'PrismaClientValidationError') {
+    return res.status(400).json({ error: 'validation_error', message: err.message });
+  }
+
+  return res.status(500).json({ error: 'internal_error' });
 });
 
-const PORT = process.env.PORT || 80;
-app.listen(PORT, () => console.log(`API listening on ${PORT}`));
