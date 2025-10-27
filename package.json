@@ -5,13 +5,15 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma --dotenv-path=./.env",
-    "prisma:studio": "prisma studio --schema=./prisma/schema.prisma --dotenv-path=./.env",
-    "prisma:migrate": "prisma migrate dev --schema=./prisma/schema.prisma --dotenv-path=./.env",
-    "prisma:migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma --dotenv-path=./.env",
-    "prisma:status": "prisma migrate status --schema=./prisma/schema.prisma --dotenv-path=./.env",
-    "prisma:pull": "prisma db pull --schema=./prisma/schema.prisma --dotenv-path=./.env"
+  "start": "node server.js",
+  "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
+  "prisma:studio": "prisma studio --schema=./prisma/schema.prisma",
+  "prisma:pull": "prisma db pull --schema=./prisma/schema.prisma",
+  "prisma:status": "prisma migrate status --schema=./prisma/schema.prisma",
+  "prisma:migrate": "prisma migrate dev --schema=./prisma/schema.prisma",
+  "prisma:migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma"
+}
+
   },
   "dependencies": {
     "express": "^4.19.2",
