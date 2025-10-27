@@ -22,14 +22,17 @@ model Patient {
   id          String       @id @default(cuid())
   firstName   String
   lastName    String
-  phone       String?      
+  phone       String?
   email       String?      @unique
   birthDate   DateTime?
   notes       String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   appointments Appointment[]
+
+  @@index([phone])   // ✅ Add this inside the model, not in terminal
 }
+
 
 model Appointment {
   id        String      @id @default(cuid())
