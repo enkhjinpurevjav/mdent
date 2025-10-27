@@ -1,17 +1,8 @@
 
-FROM node:20-alpine
-WORKDIR /app
-
-COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev || npm install --omit=dev
-
-COPY . .
-
-# ✅ generate prisma client at build
-RUN npx prisma generate
-
-EXPOSE 80
-ENV PORT=80
-
-# ✅ run migrations automatically at startup
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["sh", "-lc", "\
+  set -e; \
+  echo '[entrypoint] running prisma migrate deploy...'; \
+  npx prisma migrate deploy || (echo '[entrypoint] migrate failed, trying db push...' && npx prisma db push); \
+  echo '[entrypoint] starting node server...'; \
+  exec node server.js \
+"]
