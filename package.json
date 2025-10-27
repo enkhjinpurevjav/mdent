@@ -1,11 +1,19 @@
 {
   "name": "mdent",
   "version": "1.0.0",
-  "type": "module",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "dependencies": { "express": "^4.19.2" }
-}
-"prisma": {
-  "seed": "node prisma/seed.js"
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "@prisma/client": "latest"
+  },
+  "devDependencies": {
+    "prisma": "latest"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
 }
