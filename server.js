@@ -40,18 +40,23 @@ app.post('/patients', async (req, res, next) => {
 });
 
 // --- AUTH (plain text for now; we can switch to bcrypt next) ---
+const bcrypt = require('bcryptjs');   // add this at the top with other requires
+
+// --- AUTH (now using bcrypt) ---
 app.post('/auth/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'missing_fields' });
 
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || user.password !== password) {
-    return res.status(401).json({ error: 'invalid_credentials' });
-  }
+  if (!user) return res.status(401).json({ error: 'invalid_credentials' });
+
+  const ok = await bcrypt.compare(password, user.password);   // <-- hashed compare
+  if (!ok) return res.status(401).json({ error: 'invalid_credentials' });
 
   const token = jwt.sign({ sub: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '12h' });
   res.json({ token });
 });
+
 
 // Error handler
 app.use((err, _req, res, _next) => {
