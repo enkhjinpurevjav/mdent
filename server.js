@@ -32,6 +32,7 @@ app.get('/ready', async (_req, res) => {
 
 
 
+app.use((req, res) => res.status(404).json({ error: 'not_found' }));
 
 
 
