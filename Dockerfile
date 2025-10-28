@@ -20,7 +20,7 @@ HEALTHCHECK --interval=20s --timeout=5s --start-period=30s --retries=3 \
 
 # 5) startup: generate client using real env, migrate, then start server
 CMD ["sh","-lc", "\
-  set -e; \
+ 
   echo '[entrypoint] prisma generate...'; npx prisma generate --schema=./prisma/schema.prisma; \
   echo '[entrypoint] prisma migrate deploy...'; npx prisma migrate deploy --schema=./prisma/schema.prisma || (echo '[entrypoint] migrate failed; trying db push' && npx prisma db push --schema=./prisma/schema.prisma); \
   echo '[entrypoint] starting server...'; exec node server.js \
