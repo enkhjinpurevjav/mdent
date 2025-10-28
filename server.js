@@ -82,6 +82,22 @@ app.post('/auth/login', async (req, res) => {
   res.json({ token });
 });
 
+
+
+
+// Readiness probe: only "ready" when DB responds
+app.get('/ready', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;   // cheap DB ping
+    res.json({ status: 'ready' });
+  } catch (e) {
+    res.status(503).json({ status: 'db_down' });
+  }
+});
+
+
+
+
 // Error handler
 app.use((err, _req, res, _next) => {
   console.error(err);
