@@ -1,5 +1,9 @@
 generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model Branch {
   id        String    @id @default(cuid())
@@ -33,9 +37,9 @@ model Patient {
   id         String    @id @default(cuid())
   firstName  String
   lastName   String
-  phone      String?           // NOT unique (parents share)
+  phone      String?             // NOT unique (parents share)
   email      String?  @unique
-  regNo      String?  @unique  // Mongolian citizen reg. number
+  regNo      String?  @unique    // Mongolian citizen reg. number
   birthDate  DateTime?
   gender     String?
   branchId   String?
