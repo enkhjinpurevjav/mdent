@@ -10,17 +10,24 @@ datasource db {
 
 
 model Branch {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  code      String    @unique
+  code      String   @unique
   address   String?
   phone     String?
-  users     User[]
-  patients  Patient[]
-  rooms     Room[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+
+  users      User[]
+  patients   Patient[]
+  rooms      Room[]
+  appointments Appointment[]      // NEW
+  encounters   Encounter[]        // NEW
+  media        Media[]            // NEW
+  invoices     Invoice[]          // NEW
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 
 model User {
   id        String     @id @default(cuid())
@@ -44,31 +51,27 @@ enum Role {
 }
 
 model Patient {
-  id         String    @id @default(cuid())
-  firstName  String
-  lastName   String
-  phone      String?             // NOT unique (parents share)
-  email      String?  @unique
-  regNo      String?  @unique    // Mongolian citizen reg. number
-  birthDate  DateTime?
-  gender     String?
-  branchId   String?
-  branch     Branch?   @relation(fields: [branchId], references: [id])
-  encounters Encounter[]
+  // ...existing fields...
+  encounters   Encounter[]
   appointments Appointment[]
-  media      Media[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  media        Media[]
+  invoices     Invoice[]          // NEW
+  // ...timestamps...
 }
+
 
 model Room {
   id        String   @id @default(cuid())
   branchId  String
   branch    Branch   @relation(fields: [branchId], references: [id])
   name      String
+
+  encounters Encounter[]          // NEW
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 model Appointment {
   id         String   @id @default(cuid())
@@ -106,23 +109,16 @@ enum ApptSource {
 }
 
 model Encounter {
-  id          String   @id @default(cuid())
-  patientId   String
-  patient     Patient  @relation(fields: [patientId], references: [id])
-  doctorId    String?
-  doctor      User?    @relation(fields: [doctorId], references: [id])
-  branchId    String
-  branch      Branch   @relation(fields: [branchId], references: [id])
-  roomId      String?
-  room        Room?    @relation(fields: [roomId], references: [id])
-  startedAt   DateTime @default(now())
-  endedAt     DateTime?
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // ...existing fields...
+  roomId    String?
+  room      Room?     @relation(fields: [roomId], references: [id])
+
+  media     Media[]               // NEW
+  invoices  Invoice[]             // NEW
 
   @@index([branchId, doctorId, startedAt])
 }
+
 
 model Media {
   id            String   @id @default(cuid())
