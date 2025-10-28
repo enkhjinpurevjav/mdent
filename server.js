@@ -19,7 +19,12 @@ const PORT = process.env.PORT || 80;
 app.use(express.json());
 app.use(helmet());
 app.use(cors({ origin: true, credentials: true })); // Consider restricting origin in prod
-app.use(morgan('tiny'));
+app.use(
+  morgan('tiny', {
+    skip: (req, res) => req.path === '/health' && res.statusCode === 200
+  })
+);
+
 app.use(rateLimit({ windowMs: 60_000, max: 120 })); // 120 req/min/IP
 
 // --- Health / Ready
