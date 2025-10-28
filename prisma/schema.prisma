@@ -1,3 +1,53 @@
+enum Role {
+  ADMIN
+  DOCTOR
+  NURSE
+  FRONTDESK
+  STAFF
+}
+
+enum ApptStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ApptSource {
+  WEB
+  CALL
+  WALKIN
+}
+
+enum MediaKind {
+  ORAL_PHOTO
+  XRAY
+  DOCUMENT
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  CANCELLED
+}
+
+enum PayMethod {
+  QPAY
+  CASH
+  CARD
+  BANK
+}
+
+enum PayStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+
 
 
 
