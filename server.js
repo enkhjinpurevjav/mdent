@@ -17,6 +17,25 @@ app.use(express.json());
 app.get('/', (_req, res) => res.json({ name: 'M Dent API', status: 'ok' }));
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
+
+
+
+
+app.get('/ready', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;      // cheap DB ping
+    res.json({ status: 'ready' });
+  } catch (e) {
+    res.status(503).json({ status: 'db_down' });
+  }
+});
+
+
+
+
+
+
+
 // Patients
 app.get('/patients', async (req, res, next) => {
   try {
