@@ -120,16 +120,20 @@ model Patient {
 }
 
 model Room {
-  id        String     @id @default(cuid())
+  id        String   @id @default(cuid())
   branchId  String
-  branch    Branch     @relation(fields: [branchId], references: [id])
+  branch    Branch   @relation(fields: [branchId], references: [id])
   name      String
+
+  // add this line ↓
+  appointments Appointment[]    // back-relation for Appointment.room
 
   encounters Encounter[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 
 model Appointment {
   id         String       @id @default(cuid())
