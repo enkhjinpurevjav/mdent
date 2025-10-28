@@ -91,6 +91,17 @@ app.use((err, _req, res, _next) => {
   return res.status(500).json({ error: 'internal_error' });
 });
 
+// Readiness probe: only "ready" when DB responds
+app.get('/ready', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: 'ready' });
+  } catch (e) {
+    res.status(503).json({ status: 'db_down' });
+  }
+});
+
+
 // ---- START SERVER (this was missing) ----
 const PORT = process.env.PORT || 80;
 app.listen(PORT, '0.0.0.0', () => {
