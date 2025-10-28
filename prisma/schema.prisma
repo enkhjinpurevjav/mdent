@@ -31,7 +31,13 @@ model User {
   updatedAt DateTime   @updatedAt
 }
 
-enum Role { ADMIN DOCTOR NURSE FRONTDESK STAFF }
+enum Role {
+  ADMIN
+  DOCTOR
+  NURSE
+  FRONTDESK
+  STAFF
+}
 
 model Patient {
   id         String    @id @default(cuid())
@@ -81,8 +87,19 @@ model Appointment {
   @@index([branchId, doctorId, startAt])
 }
 
-enum ApptStatus { SCHEDULED CONFIRMED COMPLETED CANCELLED NO_SHOW }
-enum ApptSource { WEB CALL WALKIN }
+enum ApptStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ApptSource {
+  WEB
+  CALL
+  WALKIN
+}
 
 model Encounter {
   id          String   @id @default(cuid())
@@ -119,7 +136,11 @@ model Media {
   createdAt     DateTime @default(now())
 }
 
-enum MediaKind { ORAL_PHOTO XRAY DOCUMENT }
+enum MediaKind {
+  ORAL_PHOTO
+  XRAY
+  DOCUMENT
+}
 
 model Invoice {
   id          String   @id @default(cuid())
@@ -155,19 +176,35 @@ model InvoiceItem {
   total      Decimal  @db.Decimal(12,2)
 }
 
-enum InvoiceStatus { UNPAID PARTIAL PAID CANCELLED }
-
-model Payment {
-  id          String   @id @default(cuid())
-  invoiceId   String
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
-  method      PayMethod
-  amount      Decimal  @db.Decimal(12,2)
-  currency    String   @default("MNT")
-  status      PayStatus @default(PENDING)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum InvoiceStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  CANCELLED
 }
 
-enum PayMethod { QPAY CASH CARD BANK }
-enum PayStatus { PENDING SUCCESS FAILED REFUNDED }
+model Payment {
+  id        String   @id @default(cuid())
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  method    PayMethod
+  amount    Decimal  @db.Decimal(12,2)
+  currency  String   @default("MNT")
+  status    PayStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PayMethod {
+  QPAY
+  CASH
+  CARD
+  BANK
+}
+
+enum PayStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
