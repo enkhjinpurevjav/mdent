@@ -14,9 +14,11 @@ RUN apk add --no-cache curl
 EXPOSE 80
 ENV PORT=80 NODE_ENV=production
 
-# 4) healthcheck waits for DB-ready app
+
+# replace your HEALTHCHECK with this:
 HEALTHCHECK --interval=20s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -fsS http://127.0.0.1/ready || exit 1
+  CMD curl -fsS http://127.0.0.1/health || exit 1
+
 
 # 5) startup: generate client using real env, migrate, then start server
 CMD ["sh","-lc", "\
