@@ -1,41 +1,27 @@
 require('dotenv').config();
 
-// server.js (CommonJS)
-
-
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');        // moved to the top
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const prisma = new PrismaClient();
-
 app.use(express.json());
 
-// Root + health
+// Health
 app.get('/', (_req, res) => res.json({ name: 'M Dent API', status: 'ok' }));
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-
-
-
-
+// Ready (DB ping)
 app.get('/ready', async (_req, res) => {
   try {
-    await prisma.$queryRaw`SELECT 1`;      // cheap DB ping
+    await prisma.$queryRaw`SELECT 1`;
     res.json({ status: 'ready' });
-  } catch (e) {
+  } catch {
     res.status(503).json({ status: 'db_down' });
   }
 });
-
-
-
-app.use((req, res) => res.status(404).json({ error: 'not_found' }));
-
-
-
 
 // Patients
 app.get('/patients', async (req, res, next) => {
@@ -66,7 +52,7 @@ app.post('/patients', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// Auth (bcrypt compare)
+// Auth
 app.post('/auth/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'missing_fields' });
@@ -83,43 +69,18 @@ app.post('/auth/login', async (req, res) => {
   res.json({ token });
 });
 
+// 404 AFTER all routes
+app.use((req, res) => res.status(404).json({ error: 'not_found' }));
 
-
-
-// Readiness probe: only "ready" when DB responds
-app.get('/ready', async (_req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;   // cheap DB ping
-    res.json({ status: 'ready' });
-  } catch (e) {
-    res.status(503).json({ status: 'db_down' });
-  }
-});
-
-
-
-
-// Error handler
+// Error handler LAST
 app.use((err, _req, res, _next) => {
   console.error(err);
-  if (err && err.code === 'P2002') return res.status(409).json({ error: 'unique_constraint', meta: err.meta });
-  if (err && err.code === 'P2003') return res.status(409).json({ error: 'foreign_key_constraint', meta: err.meta });
-  if (err && err.name === 'PrismaClientValidationError') return res.status(400).json({ error: 'validation_error', message: err.message });
+  if (err?.code === 'P2002') return res.status(409).json({ error: 'unique_constraint', meta: err.meta });
+  if (err?.code === 'P2003') return res.status(409).json({ error: 'foreign_key_constraint', meta: err.meta });
+  if (err?.name === 'PrismaClientValidationError') return res.status(400).json({ error: 'validation_error', message: err.message });
   return res.status(500).json({ error: 'internal_error' });
 });
 
-// Readiness probe: only "ready" when DB responds
-app.get('/ready', async (_req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: 'ready' });
-  } catch (e) {
-    res.status(503).json({ status: 'db_down' });
-  }
-});
-
-
-// ---- START SERVER (this was missing) ----
 const PORT = process.env.PORT || 80;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
