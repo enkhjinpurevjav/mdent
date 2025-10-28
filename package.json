@@ -1,8 +1,8 @@
 {
   "name": "mdent",
   "version": "1.0.0",
-  "main": "server.js",
   "type": "commonjs",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
@@ -13,17 +13,16 @@
     "prisma:migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma"
   },
   "dependencies": {
-    "express": "^4.19.2",
     "@prisma/client": "6.18.0",
-    "prisma": "6.18.0",
-    "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.5"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
-"cors": "^2.8.5",
-"morgan": "^1.10.0",
-"express-rate-limit": "^7.1.5",
-"zod": "^3.23.8"
-
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "prisma": "6.18.0",
+    "zod": "^3.23.8"
   }
 }
