@@ -153,7 +153,7 @@ model Invoice {
   encounterId String?
   encounter   Encounter? @relation(fields: [encounterId], references: [id])
   branchId    String
-  branch      Branch?   @relation(fields: [branchId], references: [id])
+  branch      Branch   @relation(fields: [branchId], references: [id])
   number      String   @unique
   currency    String   @default("MNT")
   subtotal    Decimal  @db.Decimal(12,2)
